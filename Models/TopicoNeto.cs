@@ -8,10 +8,7 @@ namespace editaisAPI.Models
     [PrimaryKey(nameof(TopicoNetoNome), nameof(TopicoFilhoNome), nameof(TopicoPaiNome), nameof(DisciplinaNome), nameof(ProvaId))]
     public class TopicoNeto
     {
-        public TopicoNeto()
-        {
-
-        }
+   
         [StringLength(180)]
         public string TopicoNetoNome { get; set; }
         [StringLength(180)]
@@ -20,10 +17,10 @@ namespace editaisAPI.Models
         public string TopicoPaiNome { get; set; }
         [StringLength(80)]
         public string DisciplinaNome { get; set; }
-        public string ProvaId { get; set; }
+        public int ProvaId { get; set; }
 
         //navigation properties
-        [ForeignKey("DisciplinaNome,ProvaId,TopicoPaiNome,TopicoFilhoNome")]
+        [ForeignKey("TopicoFilhoNome, TopicoPaiNome,DisciplinaNome, ProvaId")]
         public virtual TopicoFilho TopicoFilho { get; set; }
 
     }

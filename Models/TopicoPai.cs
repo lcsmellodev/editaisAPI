@@ -21,7 +21,7 @@ namespace editaisAPI.Models
 
         //navigation properties
 
-        [ForeignKey("DisciplinaNome,ProvaId")]
+        [ForeignKey("DiscipddddddlinaNome,ProvaId")]
         public virtual Disciplina Disciplina { get; set; }
         public virtual ICollection<TopicoFilho> TopicoFilhos{ get; set; } 
 

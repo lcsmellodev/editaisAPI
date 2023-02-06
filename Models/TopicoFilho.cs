@@ -23,7 +23,7 @@ namespace editaisAPI.Models
         public int ProvaId { get; set; }
 
         //navigation properties
-        [ForeignKey("DisciplinaNome,ProvaId,TopicoPaiNome")]
+        [ForeignKey("TopicoPaiNome, DisciplinaNome, ProvaId")]
         public virtual TopicoPai TopicoPai { get; set; }
         public virtual ICollection<TopicoNeto> TopicoNetos { get; set; }
 

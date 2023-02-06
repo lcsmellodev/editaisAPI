@@ -20,7 +20,6 @@ namespace editaisAPI.Models
         public string Cargo { get; set; }
         public int ConcursoId { get; set; }
 
-
         //navigation properties
         [ForeignKey("ConcursoId")]
         public virtual Concurso Concurso { get; set; }

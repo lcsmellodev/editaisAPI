@@ -13,7 +13,6 @@ namespace editaisAPI.Models
         {
             this.Provas = new Collection<Prova>();
         }
-
         public int ConcursoId { get; set; }
         public DateTime ConcursoData { get; set; }
         public string? Banca { get; set; }
