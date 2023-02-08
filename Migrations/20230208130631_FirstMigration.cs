@@ -22,9 +22,9 @@ namespace editaisAPI.Migrations
                     ConcursoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ConcursoData = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Banca = table.Column<string>(type: "longtext", nullable: true)
+                    Banca = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Orgao = table.Column<string>(type: "longtext", nullable: true)
+                    Orgao = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -40,7 +40,7 @@ namespace editaisAPI.Migrations
                     ProvaId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ProvaData = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Cargo = table.Column<string>(type: "varchar(80)", maxLength: 80, nullable: false)
+                    Cargo = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ConcursoId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -60,13 +60,15 @@ namespace editaisAPI.Migrations
                 name: "Disciplinas",
                 columns: table => new
                 {
-                    DisciplinaNome = table.Column<string>(type: "varchar(80)", maxLength: 80, nullable: false)
+                    DisciplinaId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    DisciplinaNome = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ProvaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Disciplinas", x => new { x.DisciplinaNome, x.ProvaId });
+                    table.PrimaryKey("PK_Disciplinas", x => x.DisciplinaId);
                     table.ForeignKey(
                         name: "FK_Disciplinas_Provas_ProvaId",
                         column: x => x.ProvaId,
@@ -77,25 +79,24 @@ namespace editaisAPI.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Topicos",
+                name: "TopicoPais",
                 columns: table => new
                 {
-                    TopicoPaiNome = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: false)
+                    TopicoPaiId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    TopicoPaiNome = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    DisciplinaNome = table.Column<string>(type: "varchar(80)", maxLength: 80, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProvaId = table.Column<int>(type: "int", nullable: false),
-                    DiscipddddddlinaNome = table.Column<string>(type: "varchar(80)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    DisciplinaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Topicos", x => new { x.TopicoPaiNome, x.DisciplinaNome, x.ProvaId });
+                    table.PrimaryKey("PK_TopicoPais", x => x.TopicoPaiId);
                     table.ForeignKey(
-                        name: "FK_Topicos_Disciplinas_DiscipddddddlinaNome_ProvaId",
-                        columns: x => new { x.DiscipddddddlinaNome, x.ProvaId },
+                        name: "FK_TopicoPais_Disciplinas_DisciplinaId",
+                        column: x => x.DisciplinaId,
                         principalTable: "Disciplinas",
-                        principalColumns: new[] { "DisciplinaNome", "ProvaId" });
+                        principalColumn: "DisciplinaId",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -103,22 +104,20 @@ namespace editaisAPI.Migrations
                 name: "TopicoFilhos",
                 columns: table => new
                 {
+                    TopicoFilhoId = table.Column<int>(type: "int", maxLength: 180, nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     TopicoFilhoNome = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TopicoPaiNome = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DisciplinaNome = table.Column<string>(type: "varchar(80)", maxLength: 80, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProvaId = table.Column<int>(type: "int", nullable: false)
+                    TopicoPaiId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TopicoFilhos", x => new { x.TopicoFilhoNome, x.TopicoPaiNome, x.DisciplinaNome, x.ProvaId });
+                    table.PrimaryKey("PK_TopicoFilhos", x => x.TopicoFilhoId);
                     table.ForeignKey(
-                        name: "FK_TopicoFilhos_Topicos_TopicoPaiNome_DisciplinaNome_ProvaId",
-                        columns: x => new { x.TopicoPaiNome, x.DisciplinaNome, x.ProvaId },
-                        principalTable: "Topicos",
-                        principalColumns: new[] { "TopicoPaiNome", "DisciplinaNome", "ProvaId" },
+                        name: "FK_TopicoFilhos_TopicoPais_TopicoPaiId",
+                        column: x => x.TopicoPaiId,
+                        principalTable: "TopicoPais",
+                        principalColumn: "TopicoPaiId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -127,24 +126,20 @@ namespace editaisAPI.Migrations
                 name: "TopicoNetos",
                 columns: table => new
                 {
-                    TopicoNetoNome = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: false)
+                    TopicoNetoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    TopicoNetoNome = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TopicoFilhoNome = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TopicoPaiNome = table.Column<string>(type: "varchar(180)", maxLength: 180, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DisciplinaNome = table.Column<string>(type: "varchar(80)", maxLength: 80, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProvaId = table.Column<int>(type: "int", nullable: false)
+                    TopicoFilhoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TopicoNetos", x => new { x.TopicoNetoNome, x.TopicoFilhoNome, x.TopicoPaiNome, x.DisciplinaNome, x.ProvaId });
+                    table.PrimaryKey("PK_TopicoNetos", x => x.TopicoNetoId);
                     table.ForeignKey(
-                        name: "FK_TopicoNetos_TopicoFilhos_TopicoFilhoNome_TopicoPaiNome_Disci~",
-                        columns: x => new { x.TopicoFilhoNome, x.TopicoPaiNome, x.DisciplinaNome, x.ProvaId },
+                        name: "FK_TopicoNetos_TopicoFilhos_TopicoFilhoId",
+                        column: x => x.TopicoFilhoId,
                         principalTable: "TopicoFilhos",
-                        principalColumns: new[] { "TopicoFilhoNome", "TopicoPaiNome", "DisciplinaNome", "ProvaId" },
+                        principalColumn: "TopicoFilhoId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -160,19 +155,19 @@ namespace editaisAPI.Migrations
                 column: "ConcursoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TopicoFilhos_TopicoPaiNome_DisciplinaNome_ProvaId",
+                name: "IX_TopicoFilhos_TopicoPaiId",
                 table: "TopicoFilhos",
-                columns: new[] { "TopicoPaiNome", "DisciplinaNome", "ProvaId" });
+                column: "TopicoPaiId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TopicoNetos_TopicoFilhoNome_TopicoPaiNome_DisciplinaNome_Pro~",
+                name: "IX_TopicoNetos_TopicoFilhoId",
                 table: "TopicoNetos",
-                columns: new[] { "TopicoFilhoNome", "TopicoPaiNome", "DisciplinaNome", "ProvaId" });
+                column: "TopicoFilhoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Topicos_DiscipddddddlinaNome_ProvaId",
-                table: "Topicos",
-                columns: new[] { "DiscipddddddlinaNome", "ProvaId" });
+                name: "IX_TopicoPais_DisciplinaId",
+                table: "TopicoPais",
+                column: "DisciplinaId");
         }
 
         /// <inheritdoc />
@@ -185,7 +180,7 @@ namespace editaisAPI.Migrations
                 name: "TopicoFilhos");
 
             migrationBuilder.DropTable(
-                name: "Topicos");
+                name: "TopicoPais");
 
             migrationBuilder.DropTable(
                 name: "Disciplinas");

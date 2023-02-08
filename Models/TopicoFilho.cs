@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace editaisAPI.Models
 {
-    [PrimaryKey(nameof(TopicoFilhoNome), nameof(TopicoPaiNome), nameof(DisciplinaNome), nameof(ProvaId))]
+    
     public class TopicoFilho
     {
         public TopicoFilho()
@@ -14,16 +14,12 @@ namespace editaisAPI.Models
             this.TopicoNetos = new Collection<TopicoNeto>();
         }
 
-        [StringLength(180)]
+        public int TopicoFilhoId { get; set; }
         public string TopicoFilhoNome { get; set; }
-        [StringLength(180)]
-        public string TopicoPaiNome { get; set; }
-        [StringLength(80)]
-        public string DisciplinaNome { get; set; }
-        public int ProvaId { get; set; }
+        public int? NumTopicoFilho { get; set; }
+
 
         //navigation properties
-        [ForeignKey("TopicoPaiNome, DisciplinaNome, ProvaId")]
         public virtual TopicoPai TopicoPai { get; set; }
         public virtual ICollection<TopicoNeto> TopicoNetos { get; set; }
 

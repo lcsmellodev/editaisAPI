@@ -5,17 +5,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace editaisAPI.Models
 {
-    [PrimaryKey(nameof(ConcursoId))]
+    
     public class Concurso
     {
-
         public Concurso()
         {
             this.Provas = new Collection<Prova>();
         }
         public int ConcursoId { get; set; }
         public DateTime ConcursoData { get; set; }
+        [StringLength(180)]
         public string? Banca { get; set; }
+        [StringLength(180)]
         public string? Orgao { get; set; }
 
 

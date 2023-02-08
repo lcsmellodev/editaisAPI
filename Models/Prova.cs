@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace editaisAPI.Models
 {
-    [PrimaryKey(nameof(ProvaId))]
     public class Prova
     {
         public Prova()
@@ -16,12 +15,11 @@ namespace editaisAPI.Models
        
         public int ProvaId { get; set; }
         public DateTime ProvaData { get; set; }
-        [StringLength(80)]
+        [StringLength(180)]
         public string Cargo { get; set; }
         public int ConcursoId { get; set; }
 
         //navigation properties
-        [ForeignKey("ConcursoId")]
         public virtual Concurso Concurso { get; set; }
         public virtual ICollection<Disciplina> Disciplinas { get; set; }
 

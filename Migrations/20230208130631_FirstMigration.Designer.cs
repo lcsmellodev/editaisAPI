@@ -11,7 +11,7 @@ using editaisAPI.Context;
 namespace editaisAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230206170417_FirstMigration")]
+    [Migration("20230208130631_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -29,13 +29,15 @@ namespace editaisAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Banca")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(180)
+                        .HasColumnType("varchar(180)");
 
                     b.Property<DateTime>("ConcursoData")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Orgao")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(180)
+                        .HasColumnType("varchar(180)");
 
                     b.HasKey("ConcursoId");
 
@@ -44,14 +46,18 @@ namespace editaisAPI.Migrations
 
             modelBuilder.Entity("editaisAPI.Models.Disciplina", b =>
                 {
+                    b.Property<int>("DisciplinaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
                     b.Property<string>("DisciplinaNome")
-                        .HasMaxLength(80)
-                        .HasColumnType("varchar(80)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("ProvaId")
                         .HasColumnType("int");
 
-                    b.HasKey("DisciplinaNome", "ProvaId");
+                    b.HasKey("DisciplinaId");
 
                     b.HasIndex("ProvaId");
 
@@ -66,8 +72,8 @@ namespace editaisAPI.Migrations
 
                     b.Property<string>("Cargo")
                         .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("varchar(80)");
+                        .HasMaxLength(180)
+                        .HasColumnType("varchar(180)");
 
                     b.Property<int>("ConcursoId")
                         .HasColumnType("int");
@@ -84,77 +90,64 @@ namespace editaisAPI.Migrations
 
             modelBuilder.Entity("editaisAPI.Models.TopicoFilho", b =>
                 {
-                    b.Property<string>("TopicoFilhoNome")
+                    b.Property<int>("TopicoFilhoId")
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(180)
-                        .HasColumnType("varchar(180)");
-
-                    b.Property<string>("TopicoPaiNome")
-                        .HasMaxLength(180)
-                        .HasColumnType("varchar(180)");
-
-                    b.Property<string>("DisciplinaNome")
-                        .HasMaxLength(80)
-                        .HasColumnType("varchar(80)");
-
-                    b.Property<int>("ProvaId")
                         .HasColumnType("int");
 
-                    b.HasKey("TopicoFilhoNome", "TopicoPaiNome", "DisciplinaNome", "ProvaId");
+                    b.Property<string>("TopicoFilhoNome")
+                        .IsRequired()
+                        .HasMaxLength(180)
+                        .HasColumnType("varchar(180)");
 
-                    b.HasIndex("TopicoPaiNome", "DisciplinaNome", "ProvaId");
+                    b.Property<int>("TopicoPaiId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TopicoFilhoId");
+
+                    b.HasIndex("TopicoPaiId");
 
                     b.ToTable("TopicoFilhos");
                 });
 
             modelBuilder.Entity("editaisAPI.Models.TopicoNeto", b =>
                 {
-                    b.Property<string>("TopicoNetoNome")
-                        .HasMaxLength(180)
-                        .HasColumnType("varchar(180)");
-
-                    b.Property<string>("TopicoFilhoNome")
-                        .HasMaxLength(180)
-                        .HasColumnType("varchar(180)");
-
-                    b.Property<string>("TopicoPaiNome")
-                        .HasMaxLength(180)
-                        .HasColumnType("varchar(180)");
-
-                    b.Property<string>("DisciplinaNome")
-                        .HasMaxLength(80)
-                        .HasColumnType("varchar(80)");
-
-                    b.Property<int>("ProvaId")
+                    b.Property<int>("TopicoNetoId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.HasKey("TopicoNetoNome", "TopicoFilhoNome", "TopicoPaiNome", "DisciplinaNome", "ProvaId");
+                    b.Property<int>("TopicoFilhoId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("TopicoFilhoNome", "TopicoPaiNome", "DisciplinaNome", "ProvaId");
+                    b.Property<string>("TopicoNetoNome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("TopicoNetoId");
+
+                    b.HasIndex("TopicoFilhoId");
 
                     b.ToTable("TopicoNetos");
                 });
 
             modelBuilder.Entity("editaisAPI.Models.TopicoPai", b =>
                 {
-                    b.Property<string>("TopicoPaiNome")
-                        .HasMaxLength(180)
-                        .HasColumnType("varchar(180)");
-
-                    b.Property<string>("DisciplinaNome")
-                        .HasMaxLength(80)
-                        .HasColumnType("varchar(80)");
-
-                    b.Property<int>("ProvaId")
+                    b.Property<int>("TopicoPaiId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("DiscipddddddlinaNome")
-                        .HasColumnType("varchar(80)");
+                    b.Property<int>("DisciplinaId")
+                        .HasColumnType("int");
 
-                    b.HasKey("TopicoPaiNome", "DisciplinaNome", "ProvaId");
+                    b.Property<string>("TopicoPaiNome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.HasIndex("DiscipddddddlinaNome", "ProvaId");
+                    b.HasKey("TopicoPaiId");
 
-                    b.ToTable("Topicos");
+                    b.HasIndex("DisciplinaId");
+
+                    b.ToTable("TopicoPais");
                 });
 
             modelBuilder.Entity("editaisAPI.Models.Disciplina", b =>
@@ -183,7 +176,7 @@ namespace editaisAPI.Migrations
                 {
                     b.HasOne("editaisAPI.Models.TopicoPai", "TopicoPai")
                         .WithMany("TopicoFilhos")
-                        .HasForeignKey("TopicoPaiNome", "DisciplinaNome", "ProvaId")
+                        .HasForeignKey("TopicoPaiId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -194,7 +187,7 @@ namespace editaisAPI.Migrations
                 {
                     b.HasOne("editaisAPI.Models.TopicoFilho", "TopicoFilho")
                         .WithMany("TopicoNetos")
-                        .HasForeignKey("TopicoFilhoNome", "TopicoPaiNome", "DisciplinaNome", "ProvaId")
+                        .HasForeignKey("TopicoFilhoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -205,7 +198,9 @@ namespace editaisAPI.Migrations
                 {
                     b.HasOne("editaisAPI.Models.Disciplina", "Disciplina")
                         .WithMany("TopicoPais")
-                        .HasForeignKey("DiscipddddddlinaNome", "ProvaId");
+                        .HasForeignKey("DisciplinaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Disciplina");
                 });
